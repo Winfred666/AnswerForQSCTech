@@ -25,8 +25,9 @@ onkeydown="return key(event)">
 
 <h1 style="font-family:Microsoft Yahei;color:#ff99ff">Welcome To The Game:<br/> DON'T Tap The White Tile!</h1>
 <!--从resource文件夹中引用所需素材 -->
-<img id="wt" src="resource/wt.jpg" style="display:none" alt="nop"></img>
-<img id="bt" src="resource/bt.jpg" style="display:none" alt="nop"></img>
+<img id="wt" src="resource/wt.jpg" style="display:none" alt="white"></img>
+<img id="bt" src="resource/bt.jpg" style="display:none" alt="black"></img>
+<img id="rt" src="resource/rt.png" style="display:none" alt="red"></img>
 <canvas id="mycanvas" width="430" height="650"
 style="border:5px solid #FFFF55;">
 If you see this text,your web browser DON'T support HTML5 canvas!
@@ -34,6 +35,9 @@ If you see this text,your web browser DON'T support HTML5 canvas!
 
 <img id="be" onclick="stagame()" style="float:right" src="resource/begin.png" alt="Begin" width="70" height="50"></img>
 <big id="text1">Press the Button<br/>or "R" to start!<br/><br/>During the game,<br/>you need to press<br/>the right key<br/>where black tiles<br/>fall to the bottom!</big>
+
+
+
 <script type="text/javascript">
 
 //全局变量声明
@@ -54,9 +58,13 @@ var state=new Array();
 //从html中导入需要控制的图像
 var whi= document.getElementById("wt");
 var bla= document.getElementById("bt");
+var red= document.getElementById("rt");
 var t1=document.getElementById("text1");
 var be=document.getElementById("be");
 var pngs=new Array();
+
+var auds=new Array();
+
 var isbegin=0;
 
 var gametime=30.0;
@@ -66,13 +74,18 @@ var clock=null;//全局计时器
 //动画帧控制器
 var frame=[1,1,1,1,1,1,1];
 var lasttime=[0,0,0,0,0,0,0];
-//预加载图片
+//预加载png序列，用于动画
+//同时预加载音效，用于点击特效
 function load(){
 	for(var q=1;q<=18;q++){
 		pngs[q]=new Image();
 		pngs[q].src = "resource/ani/a000"+q+".png";
 	}
+	for(var q=1;q<=6;q++){
+		auds[q]=new Audio("resource/audio/"+q+".mp3");
+	}
 }
+
 
 function getran(){
 	return Math.floor(Math.random()*6);
@@ -102,46 +115,54 @@ function key(e){
 	}
 	
 	if(isbegin == 1){//游戏中需要操控的按键
+		var tag=0;
 		if(kchar == 'A'){
+			tag=1;
 			if(state[tileny-1] == 1){
 				addscore();
 				//每次调用动画都要设置起始帧，因为相隔足够长，不用设置时间戳
-				frame[1]=1;
+				frame[tag]=1;
 				window.requestAnimationFrame(scoreAni);
 			}
-			else end();
+			else end(tag);
 		}else if(kchar == 'S'){
-			if(state[tileny*2-1] == 1){
+			tag=2;
+			if(state[tileny*tag-1] == 1){
 				addscore();
-				frame[2]=1;
+				frame[tag]=1;
 				window.requestAnimationFrame(scoreAni2);
 			}
-			else end();
+			else end(tag);
 		}else if(kchar == 'D'){
-			if(state[tileny*3-1] == 1){
+			tag=3;
+			if(state[tileny*tag-1] == 1){
 				addscore();
-				frame[3]=1;
+				frame[tag]=1;
 				window.requestAnimationFrame(scoreAni3);
-			}else end();
+			}else end(tag);
 		}else if(kchar == 'F'){
-			if(state[tileny*4-1] == 1){
+			tag=4;
+			if(state[tileny*tag-1] == 1){
 				addscore();
-				frame[4]=1;
+				frame[tag]=1;
 				window.requestAnimationFrame(scoreAni4);
-			}else end();
+			}else end(tag);
 		}else if(kchar == 'G'){
-			if(state[tileny*5-1] == 1){
+			tag=5;
+			if(state[tileny*tag-1] == 1){
 				addscore();
-				frame[5]=1;
+				frame[tag]=1;
 				window.requestAnimationFrame(scoreAni5);
-			}else end();
+			}else end(tag);
 		}else if(kchar == 'H'){
-			if(state[tileny*6-1] == 1){
+			tag=6;
+			if(state[tileny*tag-1] == 1){
 				addscore();
-				frame[6]=1;
+				frame[tag]=1;
 				window.requestAnimationFrame(scoreAni6);
-			}else end();
+			}else end(tag);
 		}
+		if(tag != 0) auds[tag].play();
 	}
 }
 
@@ -325,15 +346,16 @@ function addscore(){
 	retext();
 	tiledown();
 }
-function end(){
-	window.alert("Game Over!\nFinalScore:"+gamescore);
-	window.clearInterval(clock);
-	isbegin=0;
+function end(endx){
+	window.clearInterval(clock);//及时停止侦听器
 	t1.innerHTML = "game over!\nyour final score is:\n"+
 	gamescore+"\n!!!\npress button\nor \"R\"to restart.";
+	window.alert("Game Over!\nFinalScore:"+gamescore);//信息显示
+	isbegin=0;//再初始化
 	gametime=30.0;
 	gamescore=0;
 	be.style.visibility="visible";
+	pen.drawImage(red,(endx-1)*tilew,(tileny-1)*tileh);//红色错误块放最后，防止被刷新
 }
 	
 
