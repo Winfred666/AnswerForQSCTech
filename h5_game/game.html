@@ -108,6 +108,7 @@ function preOrCli(tag){
 		frame[tag]=1;
 		//避免异步错误和字符串转函数错误，此处可以使用try和catch
 		Function('"use strict";window.requestAnimationFrame(scoreAni'+tag+')')();
+		auds[tag].play();
 	}
 	else end(tag);
 }
@@ -178,13 +179,13 @@ function stagame(){
 
 
 function cli(e){
-	const posi = {
-		x:e.clientX,
-		y:e.clientY
+	const posi = {//绝对值定位法
+		x:e.pageX - c.getBoundingClientRect().left,
+		y:e.pageY - c.getBoundingClientRect().left
 	};
-	if(posi.y>=tileh*(tileny-1) && isbegin == 1){
+	if(isbegin == 1){
 		for(var q=1;q<=tilenx;q++){
-			if(posi.x<=tilew*q){
+			if(posi.x>tilew*(q-1) && posi.x<=tilew*q){
 				preOrCli(q);
 				break;//当找到对应按键时跳出循环
 			}
