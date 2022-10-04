@@ -102,6 +102,16 @@ function begin(){
 	buildkey();
 }
 
+function preOrCli(tag){
+	if(state[tileny*tag-1] == 1){
+		addscore();
+		frame[tag]=1;
+		//避免异步错误和字符串转函数错误，此处可以使用try和catch
+		Function('"use strict";window.requestAnimationFrame(scoreAni'+tag+')')();
+	}
+	else end(tag);
+}
+
 function key(e){
 	var knum;
 	var kchar;
@@ -115,54 +125,19 @@ function key(e){
 	}
 	
 	if(isbegin == 1){//游戏中需要操控的按键
-		var tag=0;
 		if(kchar == 'A'){
-			tag=1;
-			if(state[tileny-1] == 1){
-				addscore();
-				//每次调用动画都要设置起始帧，因为相隔足够长，不用设置时间戳
-				frame[tag]=1;
-				window.requestAnimationFrame(scoreAni);
-			}
-			else end(tag);
+			preOrCli(1);
 		}else if(kchar == 'S'){
-			tag=2;
-			if(state[tileny*tag-1] == 1){
-				addscore();
-				frame[tag]=1;
-				window.requestAnimationFrame(scoreAni2);
-			}
-			else end(tag);
+			preOrCli(2);
 		}else if(kchar == 'D'){
-			tag=3;
-			if(state[tileny*tag-1] == 1){
-				addscore();
-				frame[tag]=1;
-				window.requestAnimationFrame(scoreAni3);
-			}else end(tag);
+			preOrCli(3);
 		}else if(kchar == 'F'){
-			tag=4;
-			if(state[tileny*tag-1] == 1){
-				addscore();
-				frame[tag]=1;
-				window.requestAnimationFrame(scoreAni4);
-			}else end(tag);
+			preOrCli(4);
 		}else if(kchar == 'G'){
-			tag=5;
-			if(state[tileny*tag-1] == 1){
-				addscore();
-				frame[tag]=1;
-				window.requestAnimationFrame(scoreAni5);
-			}else end(tag);
+			preOrCli(5);
 		}else if(kchar == 'H'){
-			tag=6;
-			if(state[tileny*tag-1] == 1){
-				addscore();
-				frame[tag]=1;
-				window.requestAnimationFrame(scoreAni6);
-			}else end(tag);
+			preOrCli(6);
 		}
-		if(tag != 0) auds[tag].play();
 	}
 }
 
@@ -188,16 +163,35 @@ function stagame(){
 		}
 		
 	}
-	var ra1=getran();
+	var ra1=getran();//设置好看的背景和图片
 	pen.fillStyle="#F"+ra1+"F"+(ra1+4)+ra1+ra1;
 	pen.fillRect(0,0,430,650);
 	buildtiles();
 	pen.fillStyle="#F"+ra1+ra1+getran()+"C"+getran();
-	buildkey();
-	retext();
+	buildkey();//更新下方字母提醒
+	retext();//更新文字
 	be.style.visibility="hidden";
-	clock = window.setInterval(go,100);
+
+	c.addEventListener('click',cli);//开始点击事件侦听
+	clock = window.setInterval(go,100);//开始游戏倒计时
 }
+
+
+function cli(e){
+	const posi = {
+		x:e.clientX,
+		y:e.clientY
+	};
+	if(posi.y>=tileh*(tileny-1) && isbegin == 1){
+		for(var q=1;q<=tilenx;q++){
+			if(posi.x<=tilew*q){
+				preOrCli(q);
+				break;//当找到对应按键时跳出循环
+			}
+		}
+	}
+}
+
 
 function go(){//显示游戏倒计时
 	gametime=(gametime-0.1).toFixed(1);
@@ -252,7 +246,7 @@ function buildtile(x,y){
 	pen.drawImage(tiles[now],x*tilew,y*tileh);
 }
 
-function scoreAni(time){
+function scoreAni1(time){
 	if(time-lasttime[1] > fps){
 		c.hight=c.hight;//利用调整画布高度刷新画布
 		buildtile(0,tileny-1);
@@ -263,7 +257,7 @@ function scoreAni(time){
 			return;
 		lasttime[1]=time;
 	}
-	window.requestAnimationFrame(scoreAni);
+	window.requestAnimationFrame(scoreAni1);
 }
 
 
@@ -348,6 +342,7 @@ function addscore(){
 }
 function end(endx){
 	window.clearInterval(clock);//及时停止侦听器
+	c.removeEventListener('click',cli);//移除点击侦听器
 	t1.innerHTML = "game over!\nyour final score is:\n"+
 	gamescore+"\n!!!\npress button\nor \"R\"to restart.";
 	window.alert("Game Over!\nFinalScore:"+gamescore);//信息显示
