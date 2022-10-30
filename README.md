@@ -11,4 +11,4 @@
 - 盒子信息展示：效果见样式表在homework/data.css中
     [点击进入QSC产品展示网](https://winfred666.github.io/AnswerToQSCTech/Homework/InfoOfQSCSoftware/data)
 - 栈计算器：代码在homework/calculator.js中
-    [点击使用在线计算器](https://winfred666.github.io/AnswerToQSCTech/Crude_Calculator/calculator)
+    [点击使用在线计算器](https://winfred666.github.io/AnswerToQSCTech/Homework/Crude_Calculator/calculator)
