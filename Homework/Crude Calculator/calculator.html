@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>简陋De计算器</title>
+    <link rel="stylesheet" type="text/css" href="calculator.css">
+</head>
+
+<body>
+    <div id="all">
+        <div class="inorout">
+            <h1 class="slogan">在此输入计算式</h1>
+            <form action="" method="get" onsubmit="return false">
+                <input type="text" id="inp" placeholder="1+1">
+                <input type="submit" class="bot" value="=" onclick= "calculation()">
+            </form>
+
+            <div id="keys">
+            </div>
+        
+        </div>
+
+        <div class="inorout">
+            <h1 class="slogan">运算结果</h1>
+            <div class="num" id="oup"></div>
+        </div>
+    </div>
+
+    <h2 class="slogan">不要乱输入不合规范的计算式啊，出错了我才不处理，哼</h2>
+    <script type="text/javascript" src="calculator.js"></script>
+</body>
+
+</html>

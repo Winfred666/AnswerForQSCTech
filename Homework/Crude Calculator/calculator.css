@@ -1,0 +1,47 @@
+body{
+    text-align:center;
+    background-color: rgb(215, 234, 250);
+}
+#all{
+    display:flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+#inp,#oup{
+    font-size: 30px;
+}
+
+#keys{
+    float: left;
+}
+
+.bot{
+    height: 50px;
+    width: 50px;
+    margin: 5px 5px 5px 5px;
+    font-size: 30px;
+    font-weight: bolder;
+    border-color: cornflowerblue;
+    border-style: ridge;
+    border-width: 5px;
+    border-radius: 10px;
+    
+}
+
+.inorout{
+    display:flex;
+    flex-flow:column nowrap;
+    background-color: rgb(172, 216, 255);
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top:10px;
+    margin-bottom: 10px;
+    padding:10px 30px 10px 30px;
+}
+.slogan{
+    font-family:SimHei;
+    color: rgb(82, 95, 129);
+    font-weight: bold;
+    text-shadow: 1px 2px 2px rgb(30, 32, 66);
+}
